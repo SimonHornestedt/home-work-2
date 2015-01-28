@@ -12,8 +12,11 @@ Inlämningsuppgift 2 kommer att ske i olika delsteg.
     - hantera minst två olika typer av saker (En super-klass och två sub-klasser). 
     - skriva och läsa till en fil som användaren anger. Formatteringen av filen skall vara i CSV-format.
     - någon typ av interaktion med biblioteket. Ex sortera på något sätt(implementera comparable).
-3. Programmet skall innehålla ett lämpligt GUI.
-2. Övriga steg kommer ...
+2. Programmet skall innehålla ett lämpligt GUI.
+3. Krav för högre betyg (desto fler funktioner desto högre betyg)
+    - Exportering/importering av xml-filer
+    - Hämtning av information via URL
+    - Implementering av någon form av klient/server
 
 Specifiktioner
 
