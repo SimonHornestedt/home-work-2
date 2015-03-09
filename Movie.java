@@ -3,6 +3,7 @@ public class Movie extends Item implements Comparable{
     protected String movName, creatorName;
     protected int score;
     public Movie(String mName, String cName, int score){
+        
         this.movName = mName;
         this.creatorName = cName;
         this.score = score;
@@ -34,7 +35,7 @@ public class Movie extends Item implements Comparable{
     }
     @Override
     public String toString(){
-        return movName + creatorName + "Movie" + Integer.toString(this.score);
+        return movName +  ","+ creatorName +  "," + "Movie" +  ","+ Integer.toString(this.score) + "," + id;
     }
 
 }

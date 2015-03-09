@@ -21,12 +21,12 @@ import static javax.swing.JOptionPane.showInputDialog;
 public class RegisterGUI extends javax.swing.JFrame {
     
     
-        public Library lib; 
+        public Model lib; 
     
     private MyTableModel tableModel = new MyTableModel();
-    public RegisterGUI() {
+    public RegisterGUI() throws IOException {
         
-        lib = new Library();
+        lib = new Model();
         tableModel = new MyTableModel();
         initComponents();
     }
@@ -91,7 +91,7 @@ public class RegisterGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblCurrentLib.setText("Current library:");
+        lblCurrentLib.setText("Current library: default.csv");
 
         lblAddObject.setText("Add object to library");
 
@@ -118,7 +118,11 @@ public class RegisterGUI extends javax.swing.JFrame {
         });
 
         btnClear.setText("Clear");
-        btnClear.setEnabled(false);
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         btnRemove.setText("Remove Object");
         btnRemove.setEnabled(false);
@@ -313,7 +317,7 @@ public class RegisterGUI extends javax.swing.JFrame {
         menuArchive.setText("Archive");
 
         menuItemNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        menuItemNew.setText("New library...");
+        menuItemNew.setText("New collection...");
         menuItemNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemNewActionPerformed(evt);
@@ -322,11 +326,21 @@ public class RegisterGUI extends javax.swing.JFrame {
         menuArchive.add(menuItemNew);
 
         menuItemOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        menuItemOpen.setText("Open library...");
+        menuItemOpen.setText("Open collection...");
+        menuItemOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemOpenActionPerformed(evt);
+            }
+        });
         menuArchive.add(menuItemOpen);
 
         menuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        menuItemSave.setText("Save library...");
+        menuItemSave.setText("Save collection...");
+        menuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemSaveActionPerformed(evt);
+            }
+        });
         menuArchive.add(menuItemSave);
         menuArchive.add(jSeparator1);
 
@@ -411,8 +425,6 @@ public class RegisterGUI extends javax.swing.JFrame {
        BufferedReader in = new BufferedReader(new InputStreamReader(
                                    yc.getInputStream()));
        String inputLine;
-
-
        while ((inputLine = in.readLine()) != null) {
            replaced = inputLine.replace('"'+":", '"' +": \n");
            String [] stats = replaced.split(",");
@@ -424,35 +436,57 @@ public class RegisterGUI extends javax.swing.JFrame {
    } 
     
     private void btnAddObjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddObjectActionPerformed
-        
         int type = cmbxType.getSelectedIndex();
         switch(type){
             case 0:
                Movie m = new Movie(txfTitle.getText(), txfCreator.getText(), cmbxScore.getSelectedIndex()+1);
                lib.addMovie(m);
+               System.out.print(m.toString());
             break;
             case 1:
                Audio a = new Audio(txfTitle.getText(), txfCreator.getText(), cmbxScore.getSelectedIndex()+1);
                lib.addAudio(a);
             break;
             default:
+               
+            break;
                 //Skicka upp dialogruta
         }
-        
+        lib.updateTable(tableModel);
     }//GEN-LAST:event_btnAddObjectActionPerformed
 
     private void btnSelectLibActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectLibActionPerformed
-         
-         
+         lib.selectCollection();
+         lblCurrentLib.setText("Current library: " +lib.getSelectedCollection());
     }//GEN-LAST:event_btnSelectLibActionPerformed
 
     private void menuItemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewActionPerformed
-        String name = JOptionPane.showInputDialog("Name the new library:");
+        String name = JOptionPane.showInputDialog("Name the new collection:");
         if(name != null){
-             lib.newLibrary(name);
+            try {
+                lib.newCollection(name);
+            } catch (IOException ex) {
+                Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-       
     }//GEN-LAST:event_menuItemNewActionPerformed
+
+    private void menuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveActionPerformed
+            try {
+                lib.writeToFile();
+            } catch (IOException ex) {
+                Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_menuItemSaveActionPerformed
+
+    private void menuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenActionPerformed
+        
+    }//GEN-LAST:event_menuItemOpenActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        txfTitle.setText("");
+        txfCreator.setText("");
+    }//GEN-LAST:event_btnClearActionPerformed
    
    
     /**
@@ -485,7 +519,11 @@ public class RegisterGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RegisterGUI().setVisible(true);
+                try {
+                    new RegisterGUI().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

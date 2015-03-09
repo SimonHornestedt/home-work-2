@@ -38,7 +38,7 @@ public class Audio extends Item implements Comparable{
     }
     @Override
     public String toString(){
-        return songName + creatorName + "Song" + Integer.toString(this.score);
+        return songName +  ","+ creatorName+  "," + "Song"+  "," + Integer.toString(this.score) + "," + id;
     }
 
 }
