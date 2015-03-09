@@ -1,3 +1,14 @@
+
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showInputDialog;
+
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,9 +19,14 @@
  * @author Simon
  */
 public class RegisterGUI extends javax.swing.JFrame {
-
+    
+    
+        public Library lib; 
+    
     private MyTableModel tableModel = new MyTableModel();
     public RegisterGUI() {
+        
+        lib = new Library();
         tableModel = new MyTableModel();
         initComponents();
     }
@@ -50,6 +66,8 @@ public class RegisterGUI extends javax.swing.JFrame {
         lblGetURL = new javax.swing.JLabel();
         txfMovieTitleURL = new javax.swing.JTextField();
         btnGetURL = new javax.swing.JButton();
+        txfYearOfPub = new javax.swing.JTextField();
+        lblYearOfpub = new javax.swing.JLabel();
         pnlChatt = new javax.swing.JPanel();
         btnStartServer = new javax.swing.JButton();
         btnStartClient = new javax.swing.JButton();
@@ -78,6 +96,11 @@ public class RegisterGUI extends javax.swing.JFrame {
         lblAddObject.setText("Add object to library");
 
         btnSelectLib.setText("Select Library");
+        btnSelectLib.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectLibActionPerformed(evt);
+            }
+        });
 
         lblTitle.setText("Title:");
 
@@ -88,10 +111,17 @@ public class RegisterGUI extends javax.swing.JFrame {
         lblScore.setText("Score:");
 
         btnAddObject.setText("Add");
+        btnAddObject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddObjectActionPerformed(evt);
+            }
+        });
 
         btnClear.setText("Clear");
+        btnClear.setEnabled(false);
 
         btnRemove.setText("Remove Object");
+        btnRemove.setEnabled(false);
 
         cmbxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Movie", "Audio" }));
 
@@ -188,6 +218,13 @@ public class RegisterGUI extends javax.swing.JFrame {
         lblGetURL.setText("What movie do you want me to grab the stats from?");
 
         btnGetURL.setText("Go get them tiger! ");
+        btnGetURL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGetURLActionPerformed(evt);
+            }
+        });
+
+        lblYearOfpub.setText("What year was that movie published?");
 
         javax.swing.GroupLayout pnlURLLayout = new javax.swing.GroupLayout(pnlURL);
         pnlURL.setLayout(pnlURLLayout);
@@ -200,10 +237,13 @@ public class RegisterGUI extends javax.swing.JFrame {
                     .addComponent(lblResultURL)
                     .addGroup(pnlURLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(pnlURLLayout.createSequentialGroup()
-                            .addComponent(txfMovieTitleURL, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlURLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txfMovieTitleURL, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblYearOfpub))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnGetURL))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txfYearOfPub, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         pnlURLLayout.setVerticalGroup(
@@ -215,11 +255,15 @@ public class RegisterGUI extends javax.swing.JFrame {
                 .addGroup(pnlURLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfMovieTitleURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGetURL))
-                .addGap(57, 57, 57)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblYearOfpub)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txfYearOfPub, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(lblResultURL)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         jTabPane.addTab("oMDB", pnlURL);
@@ -270,6 +314,11 @@ public class RegisterGUI extends javax.swing.JFrame {
 
         menuItemNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         menuItemNew.setText("New library...");
+        menuItemNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemNewActionPerformed(evt);
+            }
+        });
         menuArchive.add(menuItemNew);
 
         menuItemOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
@@ -335,7 +384,77 @@ public class RegisterGUI extends javax.swing.JFrame {
     private void menuItemFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemFinishActionPerformed
         System.exit(EXIT_ON_CLOSE);
     }//GEN-LAST:event_menuItemFinishActionPerformed
+    /**
+    * Metoden kör ReadURL
+    * @param evt är knapptryckningen
+    */
+    private void btnGetURLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetURLActionPerformed
+        try {
+            this.readURL(evt);
+        } catch (Exception ex) {
+            Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnGetURLActionPerformed
+    /**
+    * Metoden läser en URL som användaren skriver in i textfältet.
+    *
+    * @param evt är knapptryckningen
+    * @throws Exception alla möjliga fel som kan bli. 
+    */
+    private void readURL(java.awt.event.ActionEvent evt) throws Exception {                                          
 
+       String t = txfMovieTitleURL.getText();
+       String replaced = t.replace(" ", "+");
+       String y = txfYearOfPub.getText();
+       URL oracle = new URL("http://www.omdbapi.com/?t="+ replaced + "&y="+y);
+       URLConnection yc = oracle.openConnection();
+       BufferedReader in = new BufferedReader(new InputStreamReader(
+                                   yc.getInputStream()));
+       String inputLine;
+
+
+       while ((inputLine = in.readLine()) != null) {
+           replaced = inputLine.replace('"'+":", '"' +": \n");
+           String [] stats = replaced.split(",");
+           for(String str : stats){
+               txaResultURL.append(str + "\n");
+           }
+       }
+       in.close();
+   } 
+    
+    private void btnAddObjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddObjectActionPerformed
+        
+        int type = cmbxType.getSelectedIndex();
+        switch(type){
+            case 0:
+               Movie m = new Movie(txfTitle.getText(), txfCreator.getText(), cmbxScore.getSelectedIndex()+1);
+               lib.addMovie(m);
+            break;
+            case 1:
+               Audio a = new Audio(txfTitle.getText(), txfCreator.getText(), cmbxScore.getSelectedIndex()+1);
+               lib.addAudio(a);
+            break;
+            default:
+                //Skicka upp dialogruta
+        }
+        
+    }//GEN-LAST:event_btnAddObjectActionPerformed
+
+    private void btnSelectLibActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectLibActionPerformed
+         
+         
+    }//GEN-LAST:event_btnSelectLibActionPerformed
+
+    private void menuItemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewActionPerformed
+        String name = JOptionPane.showInputDialog("Name the new library:");
+        if(name != null){
+             lib.newLibrary(name);
+        }
+       
+    }//GEN-LAST:event_menuItemNewActionPerformed
+   
+   
     /**
      * @param args the command line arguments
      */
@@ -397,6 +516,7 @@ public class RegisterGUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblScore;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblType;
+    private javax.swing.JLabel lblYearOfpub;
     private javax.swing.JMenuBar menu;
     private javax.swing.JMenu menuAbout;
     private javax.swing.JMenu menuArchive;
@@ -416,5 +536,6 @@ public class RegisterGUI extends javax.swing.JFrame {
     private javax.swing.JTextField txfIP;
     private javax.swing.JTextField txfMovieTitleURL;
     private javax.swing.JTextField txfTitle;
+    private javax.swing.JTextField txfYearOfPub;
     // End of variables declaration//GEN-END:variables
 }

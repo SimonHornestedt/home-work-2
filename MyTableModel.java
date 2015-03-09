@@ -4,11 +4,11 @@ import javax.swing.table.AbstractTableModel;
 
 public class MyTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"Title", "Creator", "Type", "Score"};
+    private String[] columnNames = {"Title", "Creator", "Type", "Score", "ID"};
     private Object[][] data = {};
 
     public int getColumnCount() {
-        return columnNames.length;
+        return columnNames.length - 1;
     }
 
     public int getRowCount() {
