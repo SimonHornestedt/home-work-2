@@ -273,9 +273,18 @@ public class RegisterGUI extends javax.swing.JFrame {
         jTabPane.addTab("oMDB", pnlURL);
 
         btnStartServer.setText("CLICK ME FIRST");
+        btnStartServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartServerActionPerformed(evt);
+            }
+        });
 
         btnStartClient.setText("THEN CLICK ME!");
-        btnStartClient.setEnabled(false);
+        btnStartClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartClientActionPerformed(evt);
+            }
+        });
 
         lblIp.setText("Connect to this IPv4 adress");
 
@@ -286,17 +295,18 @@ public class RegisterGUI extends javax.swing.JFrame {
             .addGroup(pnlChattLayout.createSequentialGroup()
                 .addGroup(pnlChattLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlChattLayout.createSequentialGroup()
-                        .addGap(105, 105, 105)
-                        .addComponent(btnStartServer)
-                        .addGap(168, 168, 168)
-                        .addComponent(btnStartClient))
-                    .addGroup(pnlChattLayout.createSequentialGroup()
                         .addGap(169, 169, 169)
                         .addComponent(txfIP, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlChattLayout.createSequentialGroup()
                         .addGap(242, 242, 242)
                         .addComponent(lblIp)))
-                .addContainerGap(148, Short.MAX_VALUE))
+                .addContainerGap(205, Short.MAX_VALUE))
+            .addGroup(pnlChattLayout.createSequentialGroup()
+                .addGap(105, 105, 105)
+                .addComponent(btnStartServer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnStartClient)
+                .addGap(152, 152, 152))
         );
         pnlChattLayout.setVerticalGroup(
             pnlChattLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -487,6 +497,18 @@ public class RegisterGUI extends javax.swing.JFrame {
         txfTitle.setText("");
         txfCreator.setText("");
     }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartServerActionPerformed
+        btnStartServer.setEnabled(false);
+        btnStartClient.setEnabled(true);
+        lib.startServer();
+    }//GEN-LAST:event_btnStartServerActionPerformed
+
+    private void btnStartClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartClientActionPerformed
+        btnStartServer.setEnabled(true);
+        btnStartClient.setEnabled(false);
+        lib.startClient(txfIP.getText());
+    }//GEN-LAST:event_btnStartClientActionPerformed
    
    
     /**

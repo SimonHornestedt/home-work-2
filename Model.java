@@ -1,7 +1,9 @@
 
 import java.io.*;
+import java.net.BindException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 public class Model{
     private String name;
@@ -73,7 +75,38 @@ public class Model{
             }
             printer.close();
         }
+    public void startServer(){
+        
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+                
+                Server serv = new Server();
+                serv.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+                serv.startRunning();
+                
+                
+            }
+        };
+        Thread thr = new Thread(r);
+        thr.start();
+        
+    } 
+    public void startClient(final String ip){
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Client charlie;
+                charlie = new Client( ip ); //192.168.0.105
+                charlie.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+                charlie.startRunning();
+            }
+        };
+        Thread thr = new Thread(r);
+        thr.start();
+        
+        
     }
-    
+}
     
 
