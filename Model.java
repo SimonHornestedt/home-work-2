@@ -7,11 +7,11 @@ import javax.swing.JFrame;
 
 public class Model{
     private String name;
-    ArrayList <Collection> allCollections;
-    ArrayList <Item> currentCollection;
-    Collection modelCol;
+    private ArrayList <Collection> allCollections;
+    private ArrayList <Item> currentCollection;
+    private Collection modelCol;
     private String selectedCollection;
-    FileWriter skrivFil1;
+    private FileWriter skrivFil1;
     
     public Model() throws IOException{
         selectedCollection = "default.csv";
@@ -22,12 +22,12 @@ public class Model{
         allCollections.add(modelCol);
     }
     public void addMovie(Movie m){
-        modelCol = allCollections.get(0);
+        
         modelCol.addMovie(m);
         currentCollection = modelCol.getCollection();
     }
     public void addAudio(Audio a){
-        modelCol = allCollections.get(0);
+       
         modelCol.addAudio(a);
         currentCollection = modelCol.getCollection();
     }
@@ -39,16 +39,79 @@ public class Model{
         skrivFil1 = new FileWriter(name +".csv", true); 
         allCollections.add(c);
     }
-    public void selectCollection(){
+   
+     public void readFile(){
+        String s;
         JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
         fc.showDialog(null, "Välj fil");
         try{
         String filnamn = fc.getSelectedFile().getName(); 
         selectedCollection = filnamn;
+        for(Collection c : allCollections){
+            if(c.getName().equals(selectedCollection)){
+                modelCol = c;
+                currentCollection = modelCol.getCollection();
+                break;
+            }
+        }
+        }catch(NullPointerException e){
+            
+        }
+         try{
+            BufferedReader lasFil = new BufferedReader(new FileReader(selectedCollection));
+            s = lasFil.readLine();
+            while(s != null){
+              String [] posts = s.split(",");
+              Item item;
+                                
+               for(int i = 0; i < posts.length; i++){
+                   posts[i] = posts[i].trim();
+               }
+           
+              if("Movie".equals(posts[2])){
+                  item = new Movie();
+                  item.setName(posts[0]);
+                  item.setCreatorName(posts[1]);
+                  item.setScore(Integer.parseInt(posts[3]));
+                  
+                  
+              }else{
+                  item = new Audio();
+                  item.setName(posts[0]);
+                  item.setCreatorName(posts[1]);
+                  item.setScore(Integer.parseInt(posts[3]));
+              }
+              
+              currentCollection.add(item);
+              s = lasFil.readLine();
+            }
+            modelCol.setCollection(currentCollection);
+            allCollections.add(modelCol);
+        lasFil.close();
+        
+        }catch(IOException e){
+            System.out.print("filen finns inte");
+        }
+     }
+    public ArrayList<Item> getCurrentCollection() {
+        return currentCollection;
+    }
+    public String getImportFileName(){
+        
+        JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
+        fc.showDialog(null, "Välj fil");
+        try{
+        String filnamn = fc.getSelectedFile().getName(); 
+        if(filnamn.contains(".xml")){
+            return filnamn;
+        }else{
+            return "error";
+        }
         
         }catch(NullPointerException e){
             
         }
+        return "error";
     }
     public String getSelectedCollection() {
         return selectedCollection;
@@ -66,7 +129,7 @@ public class Model{
     public void writeToFile() throws IOException{
             modelCol = allCollections.get(0);
             currentCollection = modelCol.getCollection();
-            FileWriter skrivFil1 = new FileWriter(selectedCollection, true); 
+            skrivFil1 = new FileWriter(selectedCollection, true); 
             BufferedWriter writer = new BufferedWriter(skrivFil1);
             PrintWriter printer = new PrintWriter(writer);
             for(Item i : currentCollection){

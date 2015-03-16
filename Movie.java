@@ -8,6 +8,10 @@ public class Movie extends Item implements Comparable{
         this.creatorName = cName;
         this.score = score;
     }
+    public Movie(){
+        
+        
+    }
     @Override
     public String getName() {
         return movName;
@@ -22,13 +26,24 @@ public class Movie extends Item implements Comparable{
     }
     @Override
     public void setScore(int score) {
-        if(score >= 0 && score <= 10){
+        if(score >= 0 && score <= 5){
         this.score = score;    
         }else{
             //infoga JOptpane
         }
         
     }
+
+    @Override
+    public void setName(String movName) {
+        this.movName = movName;
+    }
+    
+    @Override
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+    
     @Override
     public int compareTo(Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -38,4 +53,10 @@ public class Movie extends Item implements Comparable{
         return movName +  ","+ creatorName +  "," + "Movie" +  ","+ Integer.toString(this.score) + "," + id;
     }
 
+    @Override
+    public String getType() {
+        return "Movie";
+    }
+
+    
 }

@@ -7,6 +7,9 @@ public class Audio extends Item implements Comparable{
         this.creatorName = cName;
         this.score = score;
     }
+    public Audio(){
+        
+    }
     
     @Override
     public String getName() {
@@ -22,12 +25,21 @@ public class Audio extends Item implements Comparable{
     }
     @Override
     public void setScore(int score) {
-        if(score >= 0 && score <= 10){
+        if(score >= 0 && score <= 5){
         this.score = score;    
         }else{
             //infoga JOptpane
         }
         
+    }
+    @Override
+    public void setName(String songName) {
+        this.songName = songName;
+    }
+    
+    @Override
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     
@@ -35,6 +47,10 @@ public class Audio extends Item implements Comparable{
     @Override
     public int compareTo(Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    @Override
+    public String getType() {
+        return "Audio";
     }
     @Override
     public String toString(){

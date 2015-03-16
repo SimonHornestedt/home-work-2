@@ -6,29 +6,8 @@ import javax.swing.table.AbstractTableModel;
 public class MyTableModel extends AbstractTableModel {
 
     private final String[] columnNames = {"Title", "Creator", "Type", "Score", "ID"};
-    private Object[][] data = {
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        {"", "", "", "", ""},
-        };
+    private Object[][] data = new Object[100][5];
+    
     @Override
     public int getColumnCount() {
         return columnNames.length - 1;
@@ -45,11 +24,7 @@ public class MyTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int col) {
         return data[row][col];
     }
-    @Override
-    public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
-    }
-
+    
     /*
      * Don't need to implement this method unless your table's
      * editable.

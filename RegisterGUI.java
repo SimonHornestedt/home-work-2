@@ -29,6 +29,7 @@ public class RegisterGUI extends javax.swing.JFrame {
         lib = new Model();
         tableModel = new MyTableModel();
         initComponents();
+        jTable1.getTableHeader().setReorderingAllowed(false);
     }
 
     /**
@@ -45,7 +46,6 @@ public class RegisterGUI extends javax.swing.JFrame {
         pnlLib = new javax.swing.JPanel();
         lblCurrentLib = new javax.swing.JLabel();
         lblAddObject = new javax.swing.JLabel();
-        btnSelectLib = new javax.swing.JButton();
         lblTitle = new javax.swing.JLabel();
         lblCreator = new javax.swing.JLabel();
         lblType = new javax.swing.JLabel();
@@ -95,13 +95,6 @@ public class RegisterGUI extends javax.swing.JFrame {
 
         lblAddObject.setText("Add object to library");
 
-        btnSelectLib.setText("Select Library");
-        btnSelectLib.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSelectLibActionPerformed(evt);
-            }
-        });
-
         lblTitle.setText("Title:");
 
         lblCreator.setText("Creator:");
@@ -132,6 +125,7 @@ public class RegisterGUI extends javax.swing.JFrame {
         cmbxScore.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
 
         jTable1.setModel(tableModel);
+        jTable1.setCellSelectionEnabled(false);
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout pnlLibLayout = new javax.swing.GroupLayout(pnlLib);
@@ -146,9 +140,7 @@ public class RegisterGUI extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLibLayout.createSequentialGroup()
                         .addComponent(lblCurrentLib)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSelectLib)
-                        .addGap(58, 58, 58))
+                        .addGap(58, 502, Short.MAX_VALUE))
                     .addGroup(pnlLibLayout.createSequentialGroup()
                         .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblAddObject)
@@ -183,9 +175,7 @@ public class RegisterGUI extends javax.swing.JFrame {
             pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlLibLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCurrentLib)
-                    .addComponent(btnSelectLib))
+                .addComponent(lblCurrentLib)
                 .addGap(18, 18, 18)
                 .addComponent(lblAddObject)
                 .addGap(18, 18, 18)
@@ -208,7 +198,7 @@ public class RegisterGUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addComponent(btnRemove)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         jTabPane.addTab("Librarys", pnlLib);
@@ -356,12 +346,20 @@ public class RegisterGUI extends javax.swing.JFrame {
 
         menuItemImport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         menuItemImport.setText("Import XML");
-        menuItemImport.setEnabled(false);
+        menuItemImport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemImportActionPerformed(evt);
+            }
+        });
         menuArchive.add(menuItemImport);
 
         menuItemExport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         menuItemExport.setText("Export XML");
-        menuItemExport.setEnabled(false);
+        menuItemExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemExportActionPerformed(evt);
+            }
+        });
         menuArchive.add(menuItemExport);
         menuArchive.add(jSeparator2);
 
@@ -465,11 +463,6 @@ public class RegisterGUI extends javax.swing.JFrame {
         lib.updateTable(tableModel);
     }//GEN-LAST:event_btnAddObjectActionPerformed
 
-    private void btnSelectLibActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectLibActionPerformed
-         lib.selectCollection();
-         lblCurrentLib.setText("Current library: " +lib.getSelectedCollection());
-    }//GEN-LAST:event_btnSelectLibActionPerformed
-
     private void menuItemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewActionPerformed
         String name = JOptionPane.showInputDialog("Name the new collection:");
         if(name != null){
@@ -490,6 +483,10 @@ public class RegisterGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemSaveActionPerformed
 
     private void menuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenActionPerformed
+        lib.readFile();
+        lblCurrentLib.setText("Current library: " +lib.getSelectedCollection()); 
+        lib.updateTable(tableModel);
+        
         
     }//GEN-LAST:event_menuItemOpenActionPerformed
 
@@ -509,6 +506,22 @@ public class RegisterGUI extends javax.swing.JFrame {
         btnStartClient.setEnabled(false);
         lib.startClient(txfIP.getText());
     }//GEN-LAST:event_btnStartClientActionPerformed
+
+    private void menuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExportActionPerformed
+        XMLparser parser = new XMLparser();
+        String str =  JOptionPane.showInputDialog("Name the exported file");
+        parser.writeXML(str, lib.getCurrentCollection());
+    }//GEN-LAST:event_menuItemExportActionPerformed
+
+    private void menuItemImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemImportActionPerformed
+        XMLparser parser = new XMLparser();
+        String fileName = lib.getImportFileName();
+        if("error".equals(fileName)){
+            //Joptpane
+        }else{
+           parser.readXML(fileName);
+        }
+    }//GEN-LAST:event_menuItemImportActionPerformed
    
    
     /**
@@ -555,7 +568,6 @@ public class RegisterGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnGetURL;
     private javax.swing.JButton btnRemove;
-    private javax.swing.JButton btnSelectLib;
     private javax.swing.JButton btnStartClient;
     private javax.swing.JButton btnStartServer;
     private javax.swing.JComboBox cmbxScore;

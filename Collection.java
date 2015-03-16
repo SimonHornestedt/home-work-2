@@ -17,6 +17,10 @@ public class Collection {
         this.name = name;
         collection = new ArrayList<>();
     }
+    public Collection(String name, ArrayList<Item> current){
+        this.name = name;
+        collection = current;
+    }
     public void addMovie(Movie m){
         collection.add(m);
     }
@@ -25,5 +29,11 @@ public class Collection {
     }
     public ArrayList getCollection(){
         return collection;
+    }
+    public void setCollection(ArrayList<Item> c){
+        collection = c;
+    }
+    public String getName(){
+        return name;
     }
 }
