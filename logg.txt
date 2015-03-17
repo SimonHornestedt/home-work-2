@@ -7,4 +7,3 @@
 2015-03-16 20:31 XML export fungerar. Har problem med Importen. 
 2015-03-17 23:59 Version 1.0.0 är klar. innehållandes en massa buggar och strul men grunden fungerar. XML importen fungerar inte och jag har fått fixa till så att servern inte kan crasha hela programmet. oMDB requests är väl lite ostrukturerade men jag behöll den mesta informationen. Tabellen sorterar sig själv åt en hållet men ibland försvinner allt. kan inte hitta problemet. Koden är kommenterad och färdig. 
 
-Inledning
