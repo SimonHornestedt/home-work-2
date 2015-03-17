@@ -1,6 +1,5 @@
 
 import java.io.*;
-import java.net.BindException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -62,18 +61,22 @@ public class Model{
         Collection c = new Collection(name +".csv");
         skrivFil1 = new FileWriter(c.getName(), true); 
         allCollections.add(c);
+        currentCollection = c.getCollection();
+        selectedCollection = c.getName();
     }
     /**
      * läser in en csv fil
      */ 
      public void readFile(){
+        currentCollection.clear();
         String s;
         JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
         fc.showDialog(null, "Välj fil");
         try{
             String filnamn = fc.getSelectedFile().getName(); 
-                if(filnamn.equals(selectedCollection)){
-                    JOptionPane.showMessageDialog(null, "This collection has already been selected");
+                if(filnamn.equals(selectedCollection) || !filnamn.contains(".csv")){
+                    JOptionPane.showMessageDialog(null, "This collection has "
+                            + "already been selected or can not be selected");
                 }else{
                 selectedCollection = filnamn;
                     for(Collection c : allCollections){
@@ -213,7 +216,7 @@ public class Model{
     */
     public void writeToFile() throws IOException{
             currentCollection = modelCol.getCollection();
-            skrivFil1 = new FileWriter(selectedCollection, true); 
+            skrivFil1 = new FileWriter(selectedCollection); 
             BufferedWriter writer = new BufferedWriter(skrivFil1);
             PrintWriter printer = new PrintWriter(writer);
             for(Item i : currentCollection){

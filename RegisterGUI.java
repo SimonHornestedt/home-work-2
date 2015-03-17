@@ -1,12 +1,9 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.showInputDialog;
 
 
 /*
@@ -505,6 +502,9 @@ public class RegisterGUI extends javax.swing.JFrame {
                 Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        tableModel.reset();
+        lib.updateTable(tableModel);
+        lblCurrentLib.setText("Current library: " +lib.getSelectedCollection());
     }//GEN-LAST:event_menuItemNewActionPerformed
     /**
      * Skapar/sparar fil
@@ -524,6 +524,7 @@ public class RegisterGUI extends javax.swing.JFrame {
     private void menuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenActionPerformed
         lib.readFile();
         lblCurrentLib.setText("Current library: " +lib.getSelectedCollection()); 
+        tableModel.reset();
         lib.updateTable(tableModel);
     }//GEN-LAST:event_menuItemOpenActionPerformed
     /**
