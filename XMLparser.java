@@ -1,22 +1,13 @@
 import java.util.*;
 import java.io.*;
-
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Characters;
-import javax.xml.stream.events.StartDocument;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+import javax.xml.stream.*;
+import javax.xml.stream.events.*;
 
 public class XMLparser{
-	
-	static final String TYPE = "type";
+	/**
+         * Medlemsvariabler
+         */
+        static final String TYPE = "type";
 	static final String ITEM = "item";
 	static final String ARTIST = "artist";
 	static final String TITLE = "title";
@@ -25,7 +16,11 @@ public class XMLparser{
 	static final String KEY = "ID";
 	
 	//stax writer
-
+        /**
+         * exporterar en XML fil
+         * @param output namnet på filen
+         * @param list listan som ska skrivas till XML
+         */
         public void writeXML(String output, List<Item> list ) {
 
 		try{
@@ -76,7 +71,9 @@ public class XMLparser{
      		e.printStackTrace();
 		}
     }
-
+    /*
+     * Skapar nodes till exporteringen
+     */
     private static void createNode(XMLEventWriter eventWriter, String name,
         String value) throws XMLStreamException {
 
@@ -100,6 +97,11 @@ public class XMLparser{
     }
 
 	//Stax reader
+    /**
+     * läser en XML fil och gör om den till Items
+     * @param xmlFile namet på filen som skall läsas
+     * @return en arraylist med alla inlästa Items
+     */
 	@SuppressWarnings({ "unchecked", "null" })
 	public static ArrayList<Item> readXML(String xmlFile) {
 		ArrayList<Item> items = new ArrayList<>();
@@ -124,7 +126,7 @@ public class XMLparser{
 	            	while (attributes.hasNext()) {
 	              		Attribute attribute = attributes.next();
 	              		if (attribute.getName().toString().equals(KEY)) {
-	                		item.setID( Integer.valueOf(attribute.getValue()) );
+	                		item.setID();
 	              		}
                                 }
 	          	  	if (event.isStartElement()) {

@@ -19,17 +19,25 @@ import static javax.swing.JOptionPane.showInputDialog;
  * @author Simon
  */
 public class RegisterGUI extends javax.swing.JFrame {
-    
-    
+        /**
+         * medlemsvariabler
+         */
+        private boolean serverStarted;
         public Model lib; 
-    
-    private MyTableModel tableModel = new MyTableModel();
+        private MyTableModel tableModel = new MyTableModel();
+        /**
+         * skapar GUI
+         * @throws IOException 
+         */
     public RegisterGUI() throws IOException {
-        
+        serverStarted = false;
         lib = new Model();
         tableModel = new MyTableModel();
         initComponents();
         jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable1.setAutoCreateRowSorter(true);
+        jTable1.setRowSelectionAllowed(true);
+        jTable1.setCellSelectionEnabled(false);
     }
 
     /**
@@ -118,14 +126,17 @@ public class RegisterGUI extends javax.swing.JFrame {
         });
 
         btnRemove.setText("Remove Object");
-        btnRemove.setEnabled(false);
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
 
         cmbxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Movie", "Audio" }));
 
         cmbxScore.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
 
         jTable1.setModel(tableModel);
-        jTable1.setCellSelectionEnabled(false);
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout pnlLibLayout = new javax.swing.GroupLayout(pnlLib);
@@ -135,37 +146,37 @@ public class RegisterGUI extends javax.swing.JFrame {
             .addGroup(pnlLibLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlLibLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
-                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLibLayout.createSequentialGroup()
                         .addComponent(lblCurrentLib)
                         .addGap(58, 502, Short.MAX_VALUE))
                     .addGroup(pnlLibLayout.createSequentialGroup()
-                        .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblAddObject)
-                            .addComponent(lblTitle)
-                            .addComponent(txfTitle))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txfCreator, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCreator))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnlLibLayout.createSequentialGroup()
-                                .addComponent(lblType)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblScore))
-                            .addGroup(pnlLibLayout.createSequentialGroup()
-                                .addComponent(cmbxType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmbxScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addGroup(pnlLibLayout.createSequentialGroup()
                         .addComponent(btnAddObject, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(pnlLibLayout.createSequentialGroup()
+                        .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+                            .addGroup(pnlLibLayout.createSequentialGroup()
+                                .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblAddObject)
+                                    .addComponent(lblTitle)
+                                    .addComponent(txfTitle))
+                                .addGap(18, 18, 18)
+                                .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txfCreator, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblCreator))
+                                .addGap(18, 18, 18)
+                                .addGroup(pnlLibLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(pnlLibLayout.createSequentialGroup()
+                                        .addComponent(lblType)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblScore))
+                                    .addGroup(pnlLibLayout.createSequentialGroup()
+                                        .addComponent(cmbxType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cmbxScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addContainerGap())))
             .addGroup(pnlLibLayout.createSequentialGroup()
                 .addGap(260, 260, 260)
                 .addComponent(btnRemove)
@@ -270,6 +281,7 @@ public class RegisterGUI extends javax.swing.JFrame {
         });
 
         btnStartClient.setText("THEN CLICK ME!");
+        btnStartClient.setEnabled(false);
         btnStartClient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStartClientActionPerformed(evt);
@@ -346,6 +358,7 @@ public class RegisterGUI extends javax.swing.JFrame {
 
         menuItemImport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         menuItemImport.setText("Import XML");
+        menuItemImport.setEnabled(false);
         menuItemImport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemImportActionPerformed(evt);
@@ -376,10 +389,20 @@ public class RegisterGUI extends javax.swing.JFrame {
         menuAbout.setText("About");
 
         menuItemAbout.setText("About");
+        menuItemAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAboutActionPerformed(evt);
+            }
+        });
         menuAbout.add(menuItemAbout);
 
         menuItemHelp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         menuItemHelp.setText("Help");
+        menuItemHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemHelpActionPerformed(evt);
+            }
+        });
         menuAbout.add(menuItemHelp);
 
         menu.add(menuAbout);
@@ -402,7 +425,10 @@ public class RegisterGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Stänger av programmet vid klick på finish
+     * @param evt knapptryckningen
+     */
     private void menuItemFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemFinishActionPerformed
         System.exit(EXIT_ON_CLOSE);
     }//GEN-LAST:event_menuItemFinishActionPerformed
@@ -424,7 +450,7 @@ public class RegisterGUI extends javax.swing.JFrame {
     * @throws Exception alla möjliga fel som kan bli. 
     */
     private void readURL(java.awt.event.ActionEvent evt) throws Exception {                                          
-
+       txaResultURL.setText("");
        String t = txfMovieTitleURL.getText();
        String replaced = t.replace(" ", "+");
        String y = txfYearOfPub.getText();
@@ -442,7 +468,11 @@ public class RegisterGUI extends javax.swing.JFrame {
        }
        in.close();
    } 
-    
+    /**
+     * Lägger till ett objekt vid klick på btnAddObject
+     * och uppdaterar tabellen
+     * @param evt knapptryckningen
+     */
     private void btnAddObjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddObjectActionPerformed
         int type = cmbxType.getSelectedIndex();
         switch(type){
@@ -456,13 +486,16 @@ public class RegisterGUI extends javax.swing.JFrame {
                lib.addAudio(a);
             break;
             default:
-               
+               JOptionPane.showMessageDialog(null, "Denna typ av objekt går inte att använda.");
             break;
-                //Skicka upp dialogruta
+                
         }
         lib.updateTable(tableModel);
     }//GEN-LAST:event_btnAddObjectActionPerformed
-
+/**
+ * låter anvöndaren skriva in ett namn och skapar en ny collection
+ * @param evt knapptryckningen
+ */
     private void menuItemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewActionPerformed
         String name = JOptionPane.showInputDialog("Name the new collection:");
         if(name != null){
@@ -473,7 +506,10 @@ public class RegisterGUI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_menuItemNewActionPerformed
-
+    /**
+     * Skapar/sparar fil
+     * @param evt knapptryckning
+     */
     private void menuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveActionPerformed
             try {
                 lib.writeToFile();
@@ -481,47 +517,96 @@ public class RegisterGUI extends javax.swing.JFrame {
                 Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_menuItemSaveActionPerformed
-
+  /**
+   * Läser in en existerand fil
+   * @param evt knapptryckning
+   */
     private void menuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenActionPerformed
         lib.readFile();
         lblCurrentLib.setText("Current library: " +lib.getSelectedCollection()); 
         lib.updateTable(tableModel);
-        
-        
     }//GEN-LAST:event_menuItemOpenActionPerformed
-
+    /**
+     * Tömmer input fälten
+     * @param evt knapptryckningen
+     */
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         txfTitle.setText("");
         txfCreator.setText("");
     }//GEN-LAST:event_btnClearActionPerformed
-
+    /**
+     * Startar serverna om den inte redan körs
+     * @param evt knapptryckning
+     */
     private void btnStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartServerActionPerformed
+        
         btnStartServer.setEnabled(false);
         btnStartClient.setEnabled(true);
-        lib.startServer();
+        if(serverStarted){
+            JOptionPane.showMessageDialog(null, "The server has already been started. "
+                    + "Restart the program to be able to reconnect.");
+            btnStartClient.setEnabled(false);
+        }else{
+            lib.startServer();
+            serverStarted = true;
+        }
+        
     }//GEN-LAST:event_btnStartServerActionPerformed
-
+    /**
+     * Startar klienten
+     * @param evt knapptryckning
+     */
     private void btnStartClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartClientActionPerformed
         btnStartServer.setEnabled(true);
         btnStartClient.setEnabled(false);
         lib.startClient(txfIP.getText());
     }//GEN-LAST:event_btnStartClientActionPerformed
-
+    /**
+     * Exporterar fil till XML
+     * @param evt knapptryckning
+     */
     private void menuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExportActionPerformed
         XMLparser parser = new XMLparser();
         String str =  JOptionPane.showInputDialog("Name the exported file");
         parser.writeXML(str, lib.getCurrentCollection());
     }//GEN-LAST:event_menuItemExportActionPerformed
-
+    /**
+     * Importerar XML kan inte köras för tillfället då jag inte får den att fungera.
+     * @param evt knapptryckning
+     */
     private void menuItemImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemImportActionPerformed
         XMLparser parser = new XMLparser();
         String fileName = lib.getImportFileName();
         if("error".equals(fileName)){
-            //Joptpane
+           JOptionPane.showMessageDialog(null, "ERROR");
         }else{
            parser.readXML(fileName);
         }
     }//GEN-LAST:event_menuItemImportActionPerformed
+    /**
+     * Tar bort ett markerat objekt. 
+     * @param evt knapptryckning
+     */
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        int selectedID = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString());
+        lib.removeObject(selectedID);
+        tableModel.reset();
+        lib.updateTable(tableModel);
+    }//GEN-LAST:event_btnRemoveActionPerformed
+    /**
+     * Skickar upp en dialogruta med info om mig
+     * @param evt knapptryckning
+     */
+    private void menuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAboutActionPerformed
+        JOptionPane.showMessageDialog(null, "\u00a9 Simon Hornestedt \n 2015-03-17");
+    }//GEN-LAST:event_menuItemAboutActionPerformed
+    /**
+     * Skickar upp en dialog om programmet
+     * @param evt knapptryckningen
+     */
+    private void menuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemHelpActionPerformed
+        JOptionPane.showMessageDialog(null, "Version: 1.0.0");
+    }//GEN-LAST:event_menuItemHelpActionPerformed
    
    
     /**
